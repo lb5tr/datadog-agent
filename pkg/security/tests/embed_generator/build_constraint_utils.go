@@ -7,8 +7,10 @@ package main
 
 import (
 	"bufio"
-	"go/build/constraint"
 	"strings"
+
+	// TODO: remove this and use stdlib when updating to Go 1.16
+	"github.com/DataDog/datadog-agent/pkg/security/tests/embed_generator/constraint"
 )
 
 func convertBuildTags(content string) (string, error) {
