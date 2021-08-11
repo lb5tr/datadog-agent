@@ -417,6 +417,8 @@ core,"github.com/hectane/go-acl",MIT
 core,"github.com/hectane/go-acl/api",MIT
 core,"github.com/huandu/xstrings",MIT
 core,"github.com/ianlancetaylor/cgosymbolizer",BSD-3-Clause
+core,"github.com/iceber/iouring-go",MIT
+core,"github.com/iceber/iouring-go/syscall",MIT
 core,"github.com/imdario/mergo",BSD-3-Clause
 core,"github.com/inconshreveable/mousetrap",Apache-2.0
 core,"github.com/iovisor/gobpf/bcc",Apache-2.0
@@ -847,6 +849,11 @@ core,"gopkg.in/natefinch/lumberjack.v2",MIT
 core,"gopkg.in/yaml.v2",Apache-2.0
 core,"gopkg.in/yaml.v3",MIT
 core,"gopkg.in/zorkian/go-datadog-api.v2",BSD-3-Clause
+core,"gotest.tools/assert",Apache-2.0
+core,"gotest.tools/assert/cmp",Apache-2.0
+core,"gotest.tools/internal/difflib",BSD-3-Clause
+core,"gotest.tools/internal/format",Apache-2.0
+core,"gotest.tools/internal/source",Apache-2.0
 core,"k8s.io/api/admission/v1",Apache-2.0
 core,"k8s.io/api/admission/v1beta1",Apache-2.0
 core,"k8s.io/api/admissionregistration/v1",Apache-2.0
