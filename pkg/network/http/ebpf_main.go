@@ -9,7 +9,6 @@ import (
 	ddebpf "github.com/DataDog/datadog-agent/pkg/ebpf"
 	"github.com/DataDog/datadog-agent/pkg/ebpf/bytecode"
 	"github.com/DataDog/datadog-agent/pkg/network/config"
-	netebpf "github.com/DataDog/datadog-agent/pkg/network/ebpf"
 	"github.com/DataDog/datadog-agent/pkg/network/ebpf/probes"
 	"github.com/DataDog/ebpf"
 	"github.com/DataDog/ebpf/manager"
@@ -57,7 +56,7 @@ type ebpfProgram struct {
 }
 
 func newEBPFProgram(c *config.Config, offsets []manager.ConstantEditor, sockFD *ebpf.Map) (*ebpfProgram, error) {
-	bytecode, err := netebpf.ReadHTTPModule(c.BPFDir, c.BPFDebug)
+	bytecode, err := getRuntimeCompiledHTTP(c)
 	if err != nil {
 		return nil, err
 	}
