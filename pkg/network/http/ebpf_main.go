@@ -114,8 +114,9 @@ func newEBPFProgram(c *config.Config, offsets []manager.ConstantEditor, sockFD *
 
 	// Load SSL & Crypto probes
 	var extraProbes []string
-	extraProbes = append(extraProbes, sslProbes...)
+	extraProbes = append(extraProbes, openSSLProbes...)
 	extraProbes = append(extraProbes, cryptoProbes...)
+	extraProbes = append(extraProbes, gnuTLSProbes...)
 	for _, sec := range extraProbes {
 		mgr.Probes = append(mgr.Probes, &manager.Probe{
 			Section: sec,

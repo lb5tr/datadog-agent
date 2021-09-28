@@ -10,7 +10,7 @@ import (
 	"github.com/DataDog/ebpf/manager"
 )
 
-var sslProbes = []string{
+var openSSLProbes = []string{
 	"uprobe/SSL_set_bio",
 	"uprobe/SSL_set_fd",
 	"uprobe/SSL_read",
@@ -24,6 +24,16 @@ var cryptoProbes = []string{
 	"uretprobe/BIO_new_socket",
 }
 
+var gnuTLSProbes = []string{
+	"uprobe/gnutls_transport_set_int2",
+	"uprobe/gnutls_transport_set_ptr",
+	"uprobe/gnutls_transport_set_ptr2",
+	"uprobe/gnutls_record_recv",
+	"uretprobe/gnutls_record_recv",
+	"uprobe/gnutls_record_send",
+	"uprobe/gnutls_bye",
+}
+
 func initSSLTracing(c *config.Config, m *manager.Manager, perfHandler *ddebpf.PerfHandler) {
 	if !c.EnableHTTPSMonitoring {
 		return
@@ -32,13 +42,18 @@ func initSSLTracing(c *config.Config, m *manager.Manager, perfHandler *ddebpf.Pe
 	watcher := newSOWatcher(c.ProcRoot, perfHandler,
 		soRule{
 			re:           regexp.MustCompile(`libssl.so`),
-			registerCB:   addHooks(m, sslProbes),
-			unregisterCB: removeHooks(m, sslProbes),
+			registerCB:   addHooks(m, openSSLProbes),
+			unregisterCB: removeHooks(m, openSSLProbes),
 		},
 		soRule{
 			re:           regexp.MustCompile(`libcrypto.so`),
 			registerCB:   addHooks(m, cryptoProbes),
 			unregisterCB: removeHooks(m, cryptoProbes),
+		},
+		soRule{
+			re:           regexp.MustCompile(`libgnutls.so`),
+			registerCB:   addHooks(m, gnuTLSProbes),
+			unregisterCB: removeHooks(m, gnuTLSProbes),
 		},
 	)
 
