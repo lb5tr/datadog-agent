@@ -802,13 +802,13 @@ func TestConfigEndpoint(t *testing.T) {
 			response:           "404 page not found\n",
 		},
 		{
-			name:               "bad content",
+			name:               "bad",
 			enabled:            true,
 			expectedStatusCode: http.StatusBadRequest,
 			response:           "unexpected end of JSON input\n",
 		},
 		{
-			name:               "no new content",
+			name:               "stale",
 			reqBody:            `{"Product":1}`,
 			enabled:            true,
 			expectedStatusCode: http.StatusNoContent,

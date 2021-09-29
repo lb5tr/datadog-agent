@@ -23,8 +23,9 @@ type endpoint struct {
 	// discovery endpoint.
 	Hidden bool
 
-	// ConfigEnabled reports whether this endpoing is enabled by a config
-	ConfigEnabled func(conf *config.AgentConfig) bool
+	// IsEnabled specifies a function which reports whether this endpoint should be enabled
+	// based on the given config conf.
+	IsEnabled func(conf *config.AgentConfig) bool
 }
 
 // endpoints specifies the list of endpoints registered for the trace-agent API.

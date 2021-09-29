@@ -460,12 +460,11 @@ func (r *HTTPReceiver) handleStats(w http.ResponseWriter, req *http.Request) {
 // handleConfig handles config request.
 func (r *HTTPReceiver) handleConfig(w http.ResponseWriter, req *http.Request) {
 	defer timing.Since("datadog.trace_agent.receiver.config_process_ms", time.Now())
-	ts := r.tagStats(v06, req.Header)
-	tags := ts.AsTags()
+	tags := r.tagStats(v06, req.Header).AsTags()
 	statusCode := http.StatusOK
 	defer func() {
 		tags = append(tags, fmt.Sprintf("status_code:%d", statusCode))
-		metrics.Count("datadog.trace_agent.receiver.config", 1, tags, 1)
+		metrics.Count("datadog.trace_agent.receiver.config_request", 1, tags, 1)
 	}()
 
 	buf := getBuffer()
@@ -478,6 +477,7 @@ func (r *HTTPReceiver) handleConfig(w http.ResponseWriter, req *http.Request) {
 	var configsRequest pbgo.GetConfigsRequest
 	err = json.Unmarshal(buf.Bytes(), &configsRequest)
 	if err != nil {
+		statusCode = http.StatusBadRequest
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -495,6 +495,7 @@ func (r *HTTPReceiver) handleConfig(w http.ResponseWriter, req *http.Request) {
 
 	content, err := json.Marshal(cfg)
 	if err != nil {
+		statusCode = http.StatusInternalServerError
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
