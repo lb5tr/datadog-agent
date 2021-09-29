@@ -97,8 +97,8 @@ var endpoints = []endpoint{
 		Handler: func(r *HTTPReceiver) http.Handler { return r.debuggerProxyHandler() },
 	},
 	{
-		Pattern:       "/v0.6/config",
-		Handler:       func(r *HTTPReceiver) http.Handler { return http.HandlerFunc(r.handleConfig) },
-		ConfigEnabled: func(conf *config.AgentConfig) bool { return conf.RemoteDebugging },
+		Pattern:   "/v0.6/config",
+		Handler:   func(r *HTTPReceiver) http.Handler { return http.HandlerFunc(r.handleConfig) },
+		IsEnabled: func(conf *config.AgentConfig) bool { return conf.RemoteDebugging },
 	},
 }
