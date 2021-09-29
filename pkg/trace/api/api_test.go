@@ -814,13 +814,6 @@ func TestConfigEndpoint(t *testing.T) {
 			expectedStatusCode: http.StatusNoContent,
 			response:           "",
 		},
-		{
-			name:               "no new content",
-			reqBody:            `{"Product":1}`,
-			enabled:            true,
-			expectedStatusCode: http.StatusNoContent,
-			response:           "",
-		},
 	}
 	for _, tc := range tcs {
 		t.Run(tc.name, func(t *testing.T) {
