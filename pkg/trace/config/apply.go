@@ -383,8 +383,8 @@ func (c *AgentConfig) applyDatadogConfig() error {
 	}
 
 	// undocumented
-	if config.Datadog.IsSet("debugging.enable_remote_configuration") {
-		c.RemoteDebugging = config.Datadog.GetBool("debugging.enable_remote_configuration")
+	if config.Datadog.IsSet("live_debugging.enable_remote_configuration") {
+		c.RemoteDebugging = config.Datadog.GetBool("live_debugging.enable_remote_configuration")
 	}
 
 	return nil
