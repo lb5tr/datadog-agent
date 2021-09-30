@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/DataDog/datadog-agent/pkg/trace/config"
+	"github.com/DataDog/datadog-agent/pkg/trace/config/features"
 	"github.com/DataDog/datadog-agent/pkg/trace/info"
 	"github.com/DataDog/datadog-agent/pkg/trace/pb"
 	"github.com/DataDog/datadog-agent/pkg/trace/sampler"
@@ -818,6 +819,9 @@ func TestConfigEndpoint(t *testing.T) {
 	for _, tc := range tcs {
 		t.Run(tc.name, func(t *testing.T) {
 			assert := assert.New(t)
+			if tc.enabled {
+				features.Set("config_endpoint")
+			}
 			conf := newTestReceiverConfig()
 			rcv := newTestReceiverFromConfig(conf)
 			mux := rcv.buildMux()
