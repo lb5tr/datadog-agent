@@ -216,7 +216,6 @@ func TestInfoHandler(t *testing.T) {
 		},
 	}
 	for _, tt := range testCases {
-
 		t.Run(tt.name, func(t *testing.T) {
 			conf := defaultConf
 			if tt.updateConf != nil {
