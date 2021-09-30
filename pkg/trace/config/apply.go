@@ -382,11 +382,6 @@ func (c *AgentConfig) applyDatadogConfig() error {
 		c.LogThrottling = false
 	}
 
-	// undocumented
-	if config.Datadog.IsSet("live_debugging.enable_remote_configuration") {
-		c.RemoteDebugging = config.Datadog.GetBool("live_debugging.enable_remote_configuration")
-	}
-
 	return nil
 }
 

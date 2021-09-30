@@ -8,7 +8,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/DataDog/datadog-agent/pkg/trace/config"
+	"github.com/DataDog/datadog-agent/pkg/trace/config/features"
 )
 
 // endpoint specifies an API endpoint definition.
@@ -25,7 +25,7 @@ type endpoint struct {
 
 	// IsEnabled specifies a function which reports whether this endpoint should be enabled
 	// based on the given config conf.
-	IsEnabled func(conf *config.AgentConfig) bool
+	IsEnabled func() bool
 }
 
 // endpoints specifies the list of endpoints registered for the trace-agent API.
@@ -99,6 +99,6 @@ var endpoints = []endpoint{
 	{
 		Pattern:   "/v0.6/config",
 		Handler:   func(r *HTTPReceiver) http.Handler { return http.HandlerFunc(r.handleConfig) },
-		IsEnabled: func(conf *config.AgentConfig) bool { return conf.RemoteDebugging },
+		IsEnabled: func() bool { return features.Has("config_endpoint") },
 	},
 }

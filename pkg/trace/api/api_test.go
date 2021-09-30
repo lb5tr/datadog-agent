@@ -819,7 +819,6 @@ func TestConfigEndpoint(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			assert := assert.New(t)
 			conf := newTestReceiverConfig()
-			conf.RemoteDebugging = tc.enabled
 			rcv := newTestReceiverFromConfig(conf)
 			mux := rcv.buildMux()
 			server := httptest.NewServer(mux)
