@@ -15,6 +15,7 @@ import (
 	"github.com/DataDog/datadog-agent/pkg/trace/config"
 	"github.com/DataDog/datadog-agent/pkg/trace/info"
 	"github.com/DataDog/datadog-agent/pkg/trace/test/testutil"
+	"github.com/stretchr/testify/assert"
 )
 
 // TestInfoHandler ensures that the keys returned by the /info handler do not
@@ -47,7 +48,7 @@ func TestInfoHandler(t *testing.T) {
 		Redis:             config.Enablable{Enabled: true},
 		Memcached:         config.Enablable{Enabled: false},
 	}
-	defaultConf := &config.AgentConfig{
+	conf := &config.AgentConfig{
 		Enabled:    true,
 		Hostname:   "test.host.name",
 		DefaultEnv: "prod",
@@ -97,9 +98,9 @@ func TestInfoHandler(t *testing.T) {
 	}
 
 	var testCases = []struct {
-		name       string
-		expected   string
-		updateConf func(conf *config.AgentConfig) *config.AgentConfig
+		name                 string
+		expected             string
+		enableConfigEndpoint bool
 	}{
 		{
 			name: "default",
@@ -156,10 +157,8 @@ func TestInfoHandler(t *testing.T) {
 }`,
 		},
 		{
-			name: "debug",
-			updateConf: func(conf *config.AgentConfig) *config.AgentConfig {
-				return conf
-			},
+			name:                 "debug",
+			enableConfigEndpoint: true,
 			expected: `{
 	"version": "0.99.0",
 	"git_commit": "fab047e10",
@@ -177,7 +176,7 @@ func TestInfoHandler(t *testing.T) {
 		"/v0.6/config"
 	],
 	"feature_flags": [
-		"feature_flag"
+		"config_endpoint"
 	],
 	"client_drop_p0s": true,
 	"config": {
@@ -216,15 +215,15 @@ func TestInfoHandler(t *testing.T) {
 	}
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			conf := defaultConf
-			if tt.updateConf != nil {
-				conf = tt.updateConf(defaultConf)
-			}
 			rcv := newTestReceiverFromConfig(conf)
+			if tt.enableConfigEndpoint {
+				defer testutil.WithFeatures("config_endpoint")()
+			} else {
+				defer testutil.WithFeatures("feature_flag")()
+			}
 			defer func(old string) { info.Version = old }(info.Version)
 			defer func(old string) { info.GitCommit = old }(info.GitCommit)
 			defer func(old string) { info.BuildDate = old }(info.BuildDate)
-			defer testutil.WithFeatures("feature_flag")()
 			info.Version = "0.99.0"
 			info.GitCommit = "fab047e10"
 			info.BuildDate = "2020-12-04 15:57:06.74187 +0200 EET m=+0.029001792"
@@ -232,6 +231,7 @@ func TestInfoHandler(t *testing.T) {
 			rec := httptest.NewRecorder()
 			req := httptest.NewRequest("GET", "/info", nil)
 			h.ServeHTTP(rec, req)
+			assert.Equal(t, rec.Body.String(), tt.expected)
 			if rec.Body.String() != tt.expected {
 				t.Fatal("Output of /info has changed. Changing the keys "+
 					"is not allowed because the client rely on them and "+
