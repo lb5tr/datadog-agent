@@ -156,7 +156,7 @@ func TestInfoHandler(t *testing.T) {
 }`,
 		},
 		{
-			name: "debug enabled",
+			name: "debug",
 			updateConf: func(conf *config.AgentConfig) *config.AgentConfig {
 				conf.RemoteDebugging = true
 				return conf
